@@ -16,7 +16,7 @@ aws --endpoint-url=http://localstack:4566 s3 ls
 terraform init
 terraform plan
 terraform apply -auto-approve
-terraform destroy -auto-approve
+terraform destroy -auto-approve - destroy the entire workspace(If want to delet specific block then comment it and run the apply command)
 terraform validate
 terraform state list
 terraform show
@@ -63,6 +63,74 @@ output "instance_hostname" {
   value       = aws_instance.app_server.private_dns
 }
 
+Modules:
+Modules are reusable sets of configuration. Use modules to consistently manage complex infrastructure deployments that include multiple resources and data sources. 
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.19.0"
+
+  name = "example-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets  = ["10.0.101.0/24"]
+
+  enable_dns_hostnames    = true
+}
+
+resource "aws_instance" "app_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.private_subnets[0]
+
+  tags = {
+    Name = var.instance_name
+  }
+}
+
+----------------------------------------------------------------------
+
+Deployment methods overview:
+Blue/green deployments maintain two identical production environments concurrently. This method allows you to shift traffic from the current version (blue) to the upgraded version (green).
+Canary deployments introduce new versions incrementally to a subset of users. This approach lets you test upgrades with limited exposure, working alongside other deployment systems.
+Rolling deployments update applications gradually across multiple servers. This technique ensures only a portion of your infrastructure changes at once, reducing the risk of widespread issues.
+
+Environment setup:
+Blue/Green: Requires two nearly identical environments.
+Canary: Requires two nearly identical environments. Initially uses a small subset of users or servers.
+Rolling: Updates subsets of servers in batches.
+Traffic switching:
+Blue/Green: Switches all traffic at once.
+Canary: Gradually increases traffic to the new version.
+Rolling: Sequentially updates and transitions traffic.
+Rollback mechanism:
+Blue/Green: Switching back to the blue environment.
+Canary: Rollback involves reducing or stopping the canary deployment.
+Rolling: Rollback involves reverting batches, which can be more complex.
+
+Deployment Strategies-:
+1. Recreate Deployment:
+    Shut down the old version completely, then start the new version.
+    Downtime: Yes.
+2. Rolling Deployment: Kubernetes default deployment.
+    Gradually replace old instances with new ones, one batch at a time.
+    No downtime, but all users eventually switch to the new version.
+3. Blue-Green Deployment:  
+    Have two identical environments:
+    Blue = current version (live traffic).
+    Green = new version (staging).
+    Switch traffic to green instantly when ready.
+4. Canary Deployment:
+    Release new version to a small subset of users (say 5%), monitor for issues, then gradually increase traffic.
+5. A/B Testing:
+    Traffic is split between two or more versions to compare performance.
+6. Shadow (or Mirroring) Deployment:
+    New version receives a copy of real traffic but responses are discarded (not served to users).
+    Used to test performance and compatibility in real-world load without impacting users.            
 
 
 
