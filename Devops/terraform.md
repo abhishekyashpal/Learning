@@ -92,6 +92,27 @@ resource "aws_instance" "app_server" {
   }
 }
 
+
+---------------------------------------------------------------------
+
+infra/
+├── modules/
+│   ├── network/
+│   ├── compute/
+│   └── database/
+├── dev/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── terraform.tfvars
+├── staging/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── terraform.tfvars
+└── prod/
+    ├── main.tf
+    ├── variables.tf
+    └── terraform.tfvars
+
 ----------------------------------------------------------------------
 
 Deployment methods overview:
