@@ -1,7 +1,7 @@
 docker compose build
 docker compose up -d
 docker compose exec dev bash
-exit # to exit from the bash
+exit ##### to exit from the bash
 
 # Configure AWS CLI for LocalStack
 aws configure

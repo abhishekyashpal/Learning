@@ -136,7 +136,7 @@ ansible-galaxy collection install amazon.aws
 amazon.aws is the namespace.collection_name.
 ec2_instance is a module inside that collection.
 
-Variable Procedure-:
+Variable Precedence-:
 If you define my_var in:
 inventory
 a role
@@ -199,7 +199,7 @@ f) Force Stop Entire Play
 Debugging Failures
 ansible-playbook site.yml -vvv
 
-Ansible vault-:
+Ansible Vault-:
 Ansible Vault is a feature in Ansible that lets you securely store and encrypt sensitive data (like passwords, API keys, certificates, and private configuration) inside your playbooks, roles, or inventory files.
 ansible-vault create secrets.yml    ##### create an encrypted file.
 ansible-vault encrypt inventory.yml    ##### Encrypt an Existing File
