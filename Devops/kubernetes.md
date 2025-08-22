@@ -5,39 +5,42 @@ Kubernetes (K8s) is an open-source container orchestration platform for automati
 
 Cluster: A Kubernetes cluster consists of a control plane and one or more worker nodes. Kubernetes is a production-grade, open-source platform that orchestrates the placement (scheduling) and execution of application containers within and across computer clusters. 
 Kubernetes coordinates a highly available cluster of computers that are connected to work as a single unit. 
-Kubernetes automates the distribution and scheduling of application containers across a cluster in a more efficient way. 
+Kubernetes automates the distribution and scheduling of application containers across a cluster in a more efficient way.
+
 Control Plane Components:
 Control Planes manage the cluster and the nodes that are used to host the running applications. 
 Manage the overall state of the cluster:
-kube-apiserver
-The core component server that exposes the Kubernetes HTTP API.
-etcd
-Consistent and highly-available key value store for all API server data.
-kube-scheduler
-Looks for Pods not yet bound to a node, and assigns each Pod to a suitable node.
-kube-controller-manager
-Runs controllers to implement Kubernetes API behavior.
-cloud-controller-manager
-Integrates with underlying cloud provider(s).
+kube-apiserver: The core component server that exposes the Kubernetes HTTP API.
+etcd: Consistent and highly-available key value store for all API server data.
+kube-scheduler: Looks for Pods not yet bound to a node, and assigns each Pod to a suitable node.
+kube-controller-manager: Runs controllers to implement Kubernetes API behavior.
+cloud-controller-manager: Integrates with underlying cloud provider(s).
 
 Node Components:
 A node is a VM or a physical computer that serves as a worker machine in a Kubernetes cluster. 
 Node-level components, such as the kubelet, communicate with the control plane using the Kubernetes API 
 Run on every node, maintaining running pods and providing the Kubernetes runtime environment:
-kubelet
-Ensures that Pods are running, including their containers.
-kube-proxy (optional)
-Maintains network rules on nodes to implement Services.
-Container runtime
-Software responsible for running containers.
+kubelet: Ensures that Pods are running, including their containers.
+kube-proxy (optional): Maintains network rules on nodes to implement Services.
+Container runtime: Software responsible for running containers.
+Pod: A Pod is the smallest deployable unit in Kubernetes. A wrapper around one or more containers that share the same network and storage.
+Group containers that must work together.
+Give each Pod its own IP address.
+Share volumes between containers in the same Pod.
+Allow Kubernetes to manage them as a single unit (schedule, scale, restart, replace).
+Pod Lifecycle-:
+Pending → Waiting for resources or pulling the image
+Running → At least one container is running
+Succeeded → All containers exited successfully
+Failed → At least one container exited with an error
+Unknown → Node unreachable
+Pods are ephemeral: If a Pod dies, Kubernetes replaces it with a new Pod (new IP)
 
-
-Pod-The smallest unit, which holds one or more containers
-Service-Exposes pods to internal/external traffic
-Deployment-Manages replica sets and ensures the desired state
-ReplicaSet-Ensures a specified number of pod replicas are running at any given time
-Namespace-Isolates environments (e.g., dev, test, prod)
-ConfigMap & Secret-For managing configuration data and sensitive information.
+Service: Exposes pods to internal/external traffic
+Deployment: Manages replica sets and ensures the desired state
+ReplicaSet: Ensures a specified number of pod replicas are running at any given time
+Namespace: Isolates environments (e.g., dev, test, prod)
+ConfigMap & Secret: For managing configuration data and sensitive information.
 Containers: Technology for packaging an application along with its runtime dependencies.
 
 
@@ -47,7 +50,6 @@ minikube status
 
 kubectl config current-context
 kubectl get nodes
-kubectl config current-context
 kubectl config use-context minikube
 kubectl config use-context docker-desktop
 Create Deployment:
@@ -65,3 +67,78 @@ kubectl rollout status deployment/nginx-deployment
 Clean Up:
 kubectl delete svc nginx-deployment
 kubectl delete deployment nginx-deployment
+
+------------------------------------------------------------
+Create VM
+Install Docker
+Install Kind
+Install Kubectl
+verify the version
+create a kind cluster using yml file
+
+kind create cluster --config kind-config.yaml --name tws-kind-cluster
+kubectl get nodes
+kubectl cluster-info
+
+Namespace => Deployment(Pod => Container) => Service => External World
+
+kubectl create ns nginx
+kubectl get namespace
+kubectl get -n namesapce_name
+kubectl run nginx --image=nginx -n nginx
+kubectl get pods -n nginx
+kubectl get deployment -n nginx
+kubectl describe pod pod_id
+
+Create a Namespace, Deployment, Service file.
+
+Clone a project from the Github-
+git clone app
+build the docker image push to the docker hub using the token-
+docker build -t notes-k8s-app .
+docker images
+docker tag notes-k8s-app:latest developerkingabhi/notes-k8s-app:latest
+docker push developerkingabhi/notes-k8s-app:latest
+
+kubectl apply -f namespace.yml
+kubectl exec -it nginx-pod -n nginx -- bash
+kubectl scale deployment/nginx-deployment -n nginx
+sudo -E kubectl port-forward service/nginx-service 
+-n nginx 80:80 --address=0.0.0.0
+
+
+Ex-1:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Deployment Strategies-:
+1. Recreate Deployment:
+    Shut down the old version completely, then start the new version.
+    Downtime: Yes.
+2. Rolling Deployment: Kubernetes default deployment.
+    Gradually replace old instances with new ones, one batch at a time.
+    No downtime, but all users eventually switch to the new version.
+3. Blue-Green Deployment:  
+    Have two identical environments:
+    Blue = current version (live traffic).
+    Green = new version (staging).
+    Switch traffic to green instantly when ready.
+4. Canary Deployment:
+    Release new version to a small subset of users (say 5%), monitor for issues, then gradually increase traffic.
+5. A/B Testing:
+    Traffic is split between two or more versions to compare performance.
+6. Shadow (or Mirroring) Deployment:
+    New version receives a copy of real traffic but responses are discarded (not served to users).
+    Used to test performance and compatibility in real-world load without impacting users.  

@@ -133,25 +133,7 @@ Blue/Green: Switching back to the blue environment.
 Canary: Rollback involves reducing or stopping the canary deployment.
 Rolling: Rollback involves reverting batches, which can be more complex.
 
-Deployment Strategies-:
-1. Recreate Deployment:
-    Shut down the old version completely, then start the new version.
-    Downtime: Yes.
-2. Rolling Deployment: Kubernetes default deployment.
-    Gradually replace old instances with new ones, one batch at a time.
-    No downtime, but all users eventually switch to the new version.
-3. Blue-Green Deployment:  
-    Have two identical environments:
-    Blue = current version (live traffic).
-    Green = new version (staging).
-    Switch traffic to green instantly when ready.
-4. Canary Deployment:
-    Release new version to a small subset of users (say 5%), monitor for issues, then gradually increase traffic.
-5. A/B Testing:
-    Traffic is split between two or more versions to compare performance.
-6. Shadow (or Mirroring) Deployment:
-    New version receives a copy of real traffic but responses are discarded (not served to users).
-    Used to test performance and compatibility in real-world load without impacting users.            
+          
 
 
 
