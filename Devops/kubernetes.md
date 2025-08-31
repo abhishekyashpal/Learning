@@ -69,18 +69,36 @@ kubectl delete svc nginx-deployment
 kubectl delete deployment nginx-deployment
 
 ------------------------------------------------------------
-Create VM
+Create VM - ubuntu-2204-jammy-v20250815 | X86_64
 Install Docker
 Install Kind
 Install Kubectl
-verify the version
-create a kind cluster using yml file
+Create Cluster
+    kind create cluster --name whatsapp-cluster --image kindest/node:v1.30.0
+    kubectl cluster-info
+Install Helm
+    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+Install ArgoCD
+    kubectl create namespace argocd
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    kubectl get pods -n argocd
+    kubectl apply -f apps/whatsapp-backend-dev.yaml -n argocd
+    kubectl get applications -n argocd
+    sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    sudo chmod +x /usr/local/bin/argocd
+    kubectl describe application whatsapp-backend-dev -n argocd
+    kubectl port-forward svc/argocd-server -n argocd 8080:443   
+    argocd app list
+Install Ingress
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+    # Add repo (if not already)
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    helm repo update
 
-kind create cluster --config kind-config.yaml --name tws-kind-cluster
-kubectl get nodes
-kubectl cluster-info
+    # Install with admission webhook enabled
+    helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx
 
-Namespace => Deployment(Pod => Container) => Service => External World
+
 
 kubectl create ns nginx
 kubectl get namespace
@@ -90,24 +108,29 @@ kubectl get pods -n nginx
 kubectl get deployment -n nginx
 kubectl describe pod pod_id
 
-Create a Namespace, Deployment, Service file.
 
-Clone a project from the Github-
-git clone app
-build the docker image push to the docker hub using the token-
-docker build -t notes-k8s-app .
-docker images
-docker tag notes-k8s-app:latest developerkingabhi/notes-k8s-app:latest
-docker push developerkingabhi/notes-k8s-app:latest
+
 
 kubectl apply -f namespace.yml
 kubectl exec -it nginx-pod -n nginx -- bash
 kubectl scale deployment/nginx-deployment -n nginx
-sudo -E kubectl port-forward service/nginx-service 
--n nginx 80:80 --address=0.0.0.0
+sudo -E kubectl port-forward service/notes-app-service -n notes-app 8080:8080 --address=0.0.0.0
 
 
-Ex-1:
+Ingress:
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+Download the ingress. - it will create a  ingress-nginx namespace 
+ingress pod must be running.
+kubectl get pods -n ingress-nginx
+kubectl get ingress -n notes-app
+kubectl describe ingress app-ingress -n notes-app
+kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8080:80 --address=0.0.0.0
+
+
+sudo nano /etc/hosts
+127.0.0.1 myapp.local
+
+
 
 
 
