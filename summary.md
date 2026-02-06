@@ -1,1 +1,1 @@
-Webhooks, Elastic Search, Websockets, Redis, Kafka, Rate Limiter, CDN, nginx, DB-Sharding/Partitioning/Replication, React, nginx, Performance Testing-k6, Prometheus, Grafana, Loki, Terraform, Kubernetes, Databricks
+Webhooks, Elastic Search, Websockets, Redis, Kafka, Rate Limiter, CDN, nginx, DB-Sharding/Partitioning/Replication, React, nginx, Performance Testing-k6, Prometheus, Grafana, Loki, Terraform, Kubernetes
