@@ -1,14 +1,13 @@
 let obj = {
-    firstName: 'rajan',
-    lastName: 'yashpal'
+    name: 'rajan',
 };
 
-let address = function (city, district) {
-    return `Candidate ${this.firstName} ${this.lastName} is from ${city} ${district}`
+let address = function (city) {
+    return `Candidate ${this.name} is from ${city}`
 }
 
-let fullAddress = address.bind(obj, 'Ara', 'Bihar');
+let fullAddress = address.bind(obj, 'Ara');
 
-console.log(address.call(obj, 'Ara', 'Bihar'));
-console.log(address.apply(obj, ['Ara', 'Bihar']));
+console.log(address.call(obj, 'Ara'));
+console.log(address.apply(obj, ['Ara']));
 console.log(fullAddress());

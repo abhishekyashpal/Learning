@@ -17,10 +17,3 @@ function CountsubsequenceSumk(arr, k, index=0, subseq=[], currSum=0) {
 
 const arr = [1, 2, 3, 4, 5];
 console.log(CountsubsequenceSumk(arr, 5));
-
-{
-    math: 50,
-    english: 40,
-    science: 60,
-    hindi: 80
-}

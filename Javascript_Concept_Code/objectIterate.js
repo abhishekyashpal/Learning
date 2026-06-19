@@ -9,5 +9,5 @@ for (const [key, value] of Object.entries(fullIntro)) {
 }
 
 for (const key in fullIntro) {
-  console.log('key', fullIntro[key]);
+  console.log(key, fullIntro[key]);
 }

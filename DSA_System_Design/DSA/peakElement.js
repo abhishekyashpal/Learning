@@ -12,10 +12,9 @@ function findPeakElement(nums) {
         }
     }
 
-    return left;
+    return nums[left];
 }
 
-// Example usage with an array of more than 10 elements:
 let nums = [1, 3, 20, 4, 1, 0, 8, 9, 6, 2, 7, 5];
-let peakIndex = findPeakElement(nums);
-console.log("Peak element index:", peakIndex);  // Output may vary depending on the peak found
+let peak = findPeakElement(nums);
+console.log("Peak element:", peak);  // Output may vary depending on the peak found
